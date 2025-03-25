@@ -20,19 +20,17 @@ module "ses" {
 }
 ```
 
-## Complete Example with SNS Topic
+## Complete Example with SES Logging Enabled
 ```hcl
-resource "aws_sns_topic" "ses_notifications" {
-  name = "ses-notifications"
-}
-
 module "ses" {
   source = "git::https://github.com/TechHoldingLLC/terraform-aws-ses.git"
 
-  domain             = "example.com"
-  cloudflare_zone_id = "your-cloudflare-zone-id"
-  sns_topic_arn      = aws_sns_topic.ses_notifications.arn
-
-  depends_on = [aws_sns_topic.ses_notifications]
+  domain              = "example.com"
+  cloudflare_zone_id  = "your-cloudflare-zone-id"
+  enable_ses_logging  = true
+  
+  # Optional: Configure logging settings
+  feedback_notification_type = ["Bounce", "Complaint", "Delivery"]
+  ses_logs_retention_period  = var.env == "prod" ? 90 : 30
 }
 ```

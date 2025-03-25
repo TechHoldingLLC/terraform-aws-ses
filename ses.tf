@@ -19,9 +19,9 @@ resource "aws_ses_domain_mail_from" "bounce" {
 }
 
 resource "aws_ses_identity_notification_topic" "ses" {
-  for_each = length(var.sns_topic_arn) > 0 ? toset(["Bounce", "Complaint", "Delivery"]) : toset([])
+  for_each = var.enable_ses_logging ? toset(var.feedback_notification_type) : toset([])
 
-  topic_arn                = var.sns_topic_arn
+  topic_arn                = aws_sns_topic.ses_logging[0].arn
   notification_type        = each.key
   identity                 = aws_ses_domain_identity.ses_domain.domain
   include_original_headers = true
