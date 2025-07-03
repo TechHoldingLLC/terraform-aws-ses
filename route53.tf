@@ -15,7 +15,7 @@ resource "aws_route53_record" "ses_dkim_record" {
 resource "aws_route53_record" "ses_dmarc_record" {
   count = length(var.route53_zone_id) > 0 ? 1 : 0
 
-  zone_id = var.cloudflare_zone_id
+  zone_id = var.route53_zone_id
   name    = "_dmarc.${var.domain}"
   type    = "TXT"
   ttl     = "600"
